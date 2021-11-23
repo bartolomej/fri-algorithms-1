@@ -136,8 +136,7 @@ class ArrayDeque<T> implements Deque<T>, Stack<T>, Sequence<T> {
 
     @Override
     public void enqueue(T x) throws CollectionException {
-        // TODO Auto-generated method stub
-        
+        this.add(x);
     }
 
     @Override
