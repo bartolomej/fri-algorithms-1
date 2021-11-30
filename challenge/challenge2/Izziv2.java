@@ -1,3 +1,5 @@
+package challenge2;
+
 public class Izziv2 {
 
     public static void main(String[] args) {

@@ -1,4 +1,4 @@
-import java.lang.reflect.Array;
+package challenge1;
 
 class CollectionException extends Exception {
     public CollectionException(String msg) {
@@ -8,8 +8,8 @@ class CollectionException extends Exception {
 
 
 interface Collection {
-    static final String ERR_MSG_EMPTY = "Collection is empty.";
-    static final String ERR_MSG_FULL = "Collection is full.";
+    static final String ERR_MSG_EMPTY = "challenge1.Collection is empty.";
+    static final String ERR_MSG_FULL = "challenge1.Collection is full.";
 
     boolean isEmpty();
     boolean isFull();
@@ -165,7 +165,7 @@ public class Izziv1 {
         ArrayDeque<Number> a = new ArrayDeque<Number>(2);
         ArrayDeque<String> b = new ArrayDeque<String>();
         b.add("Test");
-        assertEquals(b.top(), "Test", "ArrayDeque<String> works correctly");
+        assertEquals(b.top(), "Test", "challenge1.ArrayDeque<String> works correctly");
 
         assertTrue(a.isEmpty(), "Initial ArrayDequeue is empty");
         assertFalse(a.isFull(), "Initial ArrayDequeue is not full");
