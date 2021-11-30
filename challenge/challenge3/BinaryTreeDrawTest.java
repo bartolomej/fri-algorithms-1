@@ -4,11 +4,11 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class BinaryTreeTest {
+class BinaryTreeDrawTest {
 
     @Test
     void binTreeInit() {
-        BinaryTree tree = new BinaryTree(1);
+        BinaryTreeDraw tree = new BinaryTreeDraw(1);
         // root node has no parent
         assertNull(tree.root.parent);
         // non-leaf and non-root nodes have children

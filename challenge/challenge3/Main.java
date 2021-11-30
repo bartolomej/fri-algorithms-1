@@ -10,11 +10,12 @@ public class Main {
             traversalType = args[1];
         } else {
             info("MRunning with default args: depth=3 traversal=postorder");
-            treeDepth = 4;
+            treeDepth = 6;
             traversalType = "preorder";
         }
 
-        BinaryTree binaryTree = new BinaryTree(treeDepth);
+        BinaryTreeDraw binaryTree = new BinaryTreeDraw(treeDepth);
+        binaryTree.init(2000, 1000);
         try {
             binaryTree.draw(traversalType);
         } catch (Exception e) {

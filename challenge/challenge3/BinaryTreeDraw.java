@@ -2,30 +2,45 @@ package challenge3;
 
 import java.awt.*;
 
-public class BinaryTree {
+public class BinaryTreeDraw {
 
     private static final int CANVAS_SIZE = 1000;
-    private static final int CANVAS_WIDTH = CANVAS_SIZE;
-    private static final int CANVAS_HEIGHT = CANVAS_SIZE;
     private static final int CANVAS_BORDER = CANVAS_SIZE / 10;
-    private static final Color NODE_COLOR = new Color(119,118,188);
-    private static final Color EDGE_COLOR = new Color(205,199,229);
+    private static final Color NODE_COLOR = new Color(119, 118, 188);
+    private static final Color EDGE_COLOR = new Color(205, 199, 229);
+
+    private int width = CANVAS_SIZE;
+    private int height = CANVAS_SIZE;
+    private double nodeRadiusFactor = 4.0;
     private boolean drawNodes;
 
     public BinaryTreeNode root;
     public int depth;
 
-    public BinaryTree(int depth) {
+    public BinaryTreeDraw(int depth) {
         this.depth = depth;
         this.root = new BinaryTreeNode(null, null, null, 0, 0);
-        initPerfectTree(1, 0, CANVAS_WIDTH / 2, root);
+    }
+
+    public void init() {
+        init(CANVAS_SIZE, CANVAS_SIZE);
+    }
+
+    public void init(int width, int height) {
+        this.width = width;
+        this.height = height;
         initCanvas();
+        initPerfectTree(1, 0, width / 2, root);
+    }
+
+    public void setNodeRadiusFactor(double factor) {
+        this.nodeRadiusFactor = factor;
     }
 
     private void initCanvas() {
-        StdDraw.setCanvasSize(CANVAS_SIZE, CANVAS_SIZE);
-        StdDraw.setXscale(-CANVAS_WIDTH / 2.0, CANVAS_WIDTH / 2.0);
-        StdDraw.setYscale(-CANVAS_HEIGHT, 0);
+        StdDraw.setCanvasSize(width, height);
+        StdDraw.setXscale(-width / 2.0, width / 2.0);
+        StdDraw.setYscale(-height, 0);
     }
 
     private void initPerfectTree(int depth, int xMiddle, int width, BinaryTreeNode node) {
@@ -119,11 +134,11 @@ public class BinaryTree {
     }
 
     public int getNLeafNodes() {
-        return (int)Math.pow(2, this.depth);
+        return (int) Math.pow(2, this.depth);
     }
 
     private double getNodeRadius() {
-        return 0.05;
+        return nodeRadiusFactor / getNLeafNodes();
     }
 
     private double getLineWidth() {
@@ -135,7 +150,7 @@ public class BinaryTree {
     }
 
     private int getY(BinaryTreeNode node) {
-        int factor = ((CANVAS_HEIGHT - 2 * CANVAS_BORDER) / this.depth) ;
+        int factor = ((height - 2 * CANVAS_BORDER) / this.depth);
         return -node.depth * factor - CANVAS_BORDER;
     }
 }
