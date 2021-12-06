@@ -8,7 +8,7 @@ import challenge4.interfaces.PriorityQueue;
 public class ArrayHeapPQ<T extends Comparable<T>> implements PriorityQueue<T> {
 
     private final Sequence<T> items = new Sequence<>();
-    private int last = 0;
+    private int last = -1;
 
     @Override
     public boolean isEmpty() {
@@ -27,8 +27,8 @@ public class ArrayHeapPQ<T extends Comparable<T>> implements PriorityQueue<T> {
 
     @Override
     public void enqueue(T x) {
-        items.insert(last, x);
         last++;
+        items.insert(last, x);
         siftUp(items.size() - 1);
     }
 
@@ -36,8 +36,8 @@ public class ArrayHeapPQ<T extends Comparable<T>> implements PriorityQueue<T> {
     public T dequeue() throws CollectionException {
         checkEmpty();
         T x = items.get(0);
-        last--;
         swap(0, last);
+        last--;
         siftDown(0);
         return x;
     }
@@ -70,12 +70,15 @@ public class ArrayHeapPQ<T extends Comparable<T>> implements PriorityQueue<T> {
         int c = 2 * p + 1;
         while (c <= last) {
             // primerjavo desni (c+1) in levi (c) element
+            // zamenjaj p z otrokom ki ima vecjo vrednost
             if (c + 1 <= last && items.get(c + 1).compareTo(items.get(c)) > 0) {
                 c += 1;
             }
+            // koncamo ce ima stars ze vecjo ali enako vrednost kot izbran otrok
             if (items.get(p).compareTo(items.get(c)) >= 0) {
                 break;
             }
+            // zamenjamo starsa in otroka
             swap(p, c);
             p = c;
             c = 2 * p + 1;
