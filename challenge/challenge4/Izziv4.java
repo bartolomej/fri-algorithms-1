@@ -158,6 +158,9 @@ class ArrayPQ<T extends Comparable<T>> implements PriorityQueue<T> {
 // implicit max heap with array
 class ArrayHeapPQ<T extends Comparable<T>> implements PriorityQueue<T> {
 
+    private final Sequence<T> items = new Sequence<>();
+    private int last;
+
     @Override
     public boolean isEmpty() {
         return false;
@@ -175,18 +178,76 @@ class ArrayHeapPQ<T extends Comparable<T>> implements PriorityQueue<T> {
 
     @Override
     public void enqueue(T x) {
-
+        this.items.add(x);
+        this.siftUp(this.items.size() - 1);
     }
 
     @Override
     public T dequeue() throws CollectionException {
-        return null;
+        T e = this.items.get(0);
+        this.items.delete(0);
+        this.siftDown(0);
+        return e;
     }
+
+    /**
+     * DVIGOVANJE ELEMENTA:
+     * – skoraj kopica, v kateri le en element
+     * – otrok kvari urejenost (glede na starša)
+     * – zamenjano ga z njegovim staršem
+     * – ponavljamo dokler gre
+     */
+    private void siftUp(int c) {
+        while (c > 0) {
+            int p = (c - 1) / 2;
+            if (items.get(p).compareTo(items.get(c)) >= 0) {
+                break;
+            }
+            swap(p, c);
+            c = p;
+        }
+    }
+
+    /**
+     * UGREZANJE ELEMENTA:
+     * - starš na indeksu i kvari urejenost (glede na otroke)
+     * – obe poddrevesi na 2i+1 in 2i+2 sta že kopici
+     * – zamenjamo ga z večjim (max-kopica) otrokom
+     */
+    private void siftDown(int p) {
+        int c = 2 * p + 1;
+        while (c <= last) {
+            // primerjavo desni (c+1) in levi (c) element
+            if (c + 1 <= last && items.get(c + 1).compareTo(items.get(c)) > 0) {
+                c += 1;
+            }
+            if (items.get(p).compareTo(items.get(c)) >= 0) {
+                break;
+            }
+            swap(p, c);
+            p = c;
+            c = 2 * p + 1;
+        }
+    }
+
+    private void swap(int a, int b) {
+        T tempB = this.items.get(b);
+        this.items.set(b, this.items.get(a));
+        this.items.set(a, tempB);
+    }
+}
+
+class HeapNode<T> {
+    T item;
+    HeapNode<T> left;
+    HeapNode<T> right;
 }
 
 // explicit max pseudo-heap with Node objects (represent nodes of a binary tree)
 class LinkedHeapPQ<T extends Comparable<T>> implements PriorityQueue<T> {
 
+    private HeapNode<T> root;
+
     @Override
     public boolean isEmpty() {
         return false;
@@ -210,6 +271,9 @@ class LinkedHeapPQ<T extends Comparable<T>> implements PriorityQueue<T> {
     @Override
     public T dequeue() throws CollectionException {
         return null;
+    }
+
+    private void siftUp() {
     }
 }
 
@@ -223,6 +287,9 @@ public class Izziv4 {
         TimingDecorator arrayPQ = new TimingDecorator("Neurejeno polje", nElements, nOperations, new ArrayPQ<>());
         arrayPQ.testPerformance();
         resultTable.printTiming(arrayPQ);
+        TimingDecorator arrayHeapPQ = new TimingDecorator("Implicitna kopica", nElements, nOperations, new ArrayHeapPQ<>());
+        arrayHeapPQ.testPerformance();
+        resultTable.printTiming(arrayHeapPQ);
     }
 
 }
