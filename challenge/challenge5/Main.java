@@ -1,5 +1,7 @@
 package challenge5;
 
+import java.util.Scanner;
+
 class Person implements Comparable<Person> {
     // class attributes
     String firstName;
@@ -7,7 +9,7 @@ class Person implements Comparable<Person> {
     int birthYear;
     // sort attributes
     static int atr = 0;
-    static SortOrder sortOrder = SortOrder.ASCENDING;
+    static SortOrder sortOrder = SortOrder.DESCENDING;
 
     Person(String firstName, String lastName, int birthYear) {
         this.firstName = firstName;
@@ -33,7 +35,7 @@ class Person implements Comparable<Person> {
                 return birthYear + "";
             default:
                 return String.format(
-                        "Person {firstName=%s, lastName=%s, birthYear=%d}",
+                        "Person{firstName=%s,lastName=%s,birthYear=%d}",
                         firstName, lastName, birthYear
                 );
         }
@@ -47,26 +49,27 @@ enum SortOrder {
 
 class Sort {
     static void bubblesort(Comparable[] array) {
-        boolean swapped = true;
-        while (swapped) {
-            swapped = false;
-            for (int i = 1; i < array.length; i++) {
+        int n = array.length;
+        while (n >= 0) {
+            int newN = n;
+            n = -1;
+            for (int i = 1; i < newN; i++) {
                 Comparable a = array[i];
                 Comparable b = array[i - 1];
                 // A is less than B
                 if (a.compareTo(b) < 0) {
                     array[i] = array[i - 1];
                     array[i - 1] = a;
-                    swapped = true;
+                    n = i - 1;
                 }
             }
-            printTrace(array);
+            printTrace(array, n);
         }
     }
 
-    static private void printTrace(Comparable[] array) {
-        for (Comparable e : array) {
-            System.out.printf("%s ", e);
+    static void printTrace(Comparable[] array, int sortedIndex) {
+        for (int i = 0; i < array.length; i++) {
+            System.out.printf("%s%s", array[i], i == sortedIndex ? " | " : " ");
         }
         System.out.println();
     }
@@ -75,8 +78,36 @@ class Sort {
 public class Main {
 
     public static void main(String[] args) {
-        Person[] array = generate(10);
-        Sort.bubblesort(array);
+        int n = promptInt("Vnesi velikost tabele oseb: ");
+        Person[] array = generate(n);
+        while (true) {
+            Person[] tempArray = array.clone();
+            Person.atr = -1;
+            Sort.printTrace(tempArray, -1);
+            int attr = promptInt("Vnesi atribut (0-2): ");
+            String sortOrder = promptString("Vnesi vrstni red (ASCENDING/DESCENDING): ");
+            Person.atr = attr;
+            Person.sortOrder = SortOrder.valueOf(sortOrder);
+            Sort.bubblesort(tempArray);
+            String repeatChar = promptString("Ponovitev ? (Y/N) ");
+            if (repeatChar.equals("N")) {
+                break;
+            } else {
+                System.out.print("\n--------------------------------------\n\n");
+            }
+        }
+    }
+
+    static int promptInt(String msg) {
+        System.out.printf("%s", msg);
+        Scanner sc = new Scanner(System.in);
+        return sc.nextInt();
+    }
+
+    static String promptString(String msg) {
+        System.out.printf("%s", msg);
+        Scanner sc = new Scanner(System.in);
+        return sc.next();
     }
 
     static Person[] generate(int n) {
