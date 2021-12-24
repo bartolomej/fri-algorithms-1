@@ -9,7 +9,11 @@ class Person implements Comparable<Person> {
     int birthYear;
     // sort attributes
     static int atr = 0;
-    static SortOrder sortOrder = SortOrder.DESCENDING;
+    static SortOrder sortOrder;
+
+    static {
+        sortOrder = SortOrder.DESCENDING;
+    }
 
     Person(String firstName, String lastName, int birthYear) {
         this.firstName = firstName;

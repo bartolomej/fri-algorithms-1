@@ -23,5 +23,5 @@ Few lines from complexity test, comparing runtimes of linear and binary search a
 
 Here are a few example renders of different trees from the third challenge.
 
-![](./challenge/challenge3/tree_d_4.png)
-![](./challenge/challenge3/tree_d_6.png)
+![](challenge3/tree_d_4.png)
+![](challenge3/tree_d_6.png)
