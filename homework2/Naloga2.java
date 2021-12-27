@@ -15,6 +15,9 @@ public class Naloga2 {
 
         Sequence<Integer> array = readNumberSequence(scanner);
 
+        System.out.println();
+        Sort.printTrace(array, -1); // print starting state
+
         switch (sort) {
             case "bubble": {
                 Sort.bubblesort(array, ascending);
@@ -32,7 +35,6 @@ public class Naloga2 {
                 throw new Exception("Unsupported sort algorithm");
             }
         }
-        Sort.printTrace(array, -1);
     }
 
     static Sequence<Integer> readNumberSequence(Scanner scanner) {
@@ -90,17 +92,19 @@ class Sort {
      * - switch them if not in correct order
      */
     static void bubblesort(Sequence<Integer> a, boolean asc) {
-        int n = a.size();
+        int n = 0;
         while (n >= 0) {
             int newN = n;
             n = -1;
-            for (int i = 1; i < newN; i++) {
+            for (int i = a.size() - 1; i > newN; i--) {
                 if (asc ? a.get(i) < a.get(i - 1) : a.get(i) > a.get(i - 1)) {
                     swap(a, i, i - 1);
                     n = i;
                 }
             }
-            printTrace(a, n);
+            if (n >= 0) {
+                printTrace(a, n - 1);
+            }
         }
     }
 
