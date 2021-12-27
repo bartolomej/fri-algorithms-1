@@ -64,7 +64,7 @@ class Sort {
                 if (a.compareTo(b) < 0) {
                     array[i] = array[i - 1];
                     array[i - 1] = a;
-                    n = i - 1;
+                    n = i;
                 }
             }
             printTrace(array, n);

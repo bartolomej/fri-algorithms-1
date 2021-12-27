@@ -15,19 +15,24 @@ public class Naloga2 {
 
         Sequence<Integer> array = readNumberSequence(scanner);
 
-        for (int i = 0; i < array.size(); i++) {
-            System.out.println(array.get(i) + "");
-        }
-
         switch (sort) {
             case "bubble": {
-                Sort.bubblesort(array);
+                Sort.bubblesort(array, ascending);
+                break;
+            }
+            case "insert": {
+                Sort.insertionSort(array, ascending);
+                break;
+            }
+            case "select": {
+                Sort.selectionSort(array, ascending);
                 break;
             }
             default: {
                 throw new Exception("Unsupported sort algorithm");
             }
         }
+        Sort.printTrace(array, -1);
     }
 
     static Sequence<Integer> readNumberSequence(Scanner scanner) {
@@ -42,23 +47,67 @@ public class Naloga2 {
 }
 
 class Sort {
-    static void bubblesort(Sequence<Integer> array) {
-        int n = array.size();
+
+    /**
+     * Navadno izbiranje.
+     * - find the smallest/largest element in unordered part
+     * - insert that element to the end of the ordered part
+     */
+    static void selectionSort(Sequence<Integer> a, boolean asc) {
+        for (int i = 0; i < a.size() - 1; i++) {
+            int m = i + 1; // index of smallest/largest element
+            for (int j = i; j < a.size(); j++) {
+                if (asc ? a.get(j) < a.get(m) : a.get(j) > a.get(m)) {
+                    m = j;
+                }
+            }
+            swap(a, i, m);
+            printTrace(a, i);
+        }
+    }
+
+    /**
+     * Navadno vstavljanje.
+     * - take the first element from unordered part
+     * - insert that element at the valid index in ordered part
+     */
+    static void insertionSort(Sequence<Integer> a, boolean asc) {
+        for (int i = 1; i < a.size(); i++) {
+            int k  = a.get(i);
+            int j = i;
+            while (j > 0 && (asc ? a.get(j - 1) > k : a.get(j - 1) < k)) {
+                a.set(j, a.get(j - 1));
+                j--;
+            }
+            a.set(j, k);
+            printTrace(a, i);
+        }
+    }
+
+    /**
+     * Urejanje z zamenjavami.
+     * - compare neighbouring elements
+     * - switch them if not in correct order
+     */
+    static void bubblesort(Sequence<Integer> a, boolean asc) {
+        int n = a.size();
         while (n >= 0) {
             int newN = n;
             n = -1;
             for (int i = 1; i < newN; i++) {
-                Integer a = array.get(i);
-                Integer b = array.get(i - 1);
-                // A is less than B
-                if (a.compareTo(b) < 0) {
-                    array.set(i, array.get(i - 1));
-                    array.set(i - 1, a);
-                    n = i - 1;
+                if (asc ? a.get(i) < a.get(i - 1) : a.get(i) > a.get(i - 1)) {
+                    swap(a, i, i - 1);
+                    n = i;
                 }
             }
-            printTrace(array, n);
+            printTrace(a, n);
         }
+    }
+
+    static void swap(Sequence<Integer> array, int i , int j) {
+        int a = array.get(i);
+        array.set(i, array.get(j));
+        array.set(j, a);
     }
 
     static void printTrace(Sequence<Integer> array, int sortedIndex) {
@@ -107,8 +156,9 @@ class Sequence<T> implements SequenceAdt<T> {
         while (i > this.array.length - 1) {
             this.resize();
         }
-        if (i > this.length) {
-            this.length = i;
+        int l = i + 1;
+        if (l > this.length) {
+            this.length = l;
         }
         this.set(i, x);
     }
