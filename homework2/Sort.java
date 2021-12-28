@@ -114,7 +114,44 @@ public class Sort {
      *
      */
     static void quickSort(Array<Integer> a, boolean asc) {
+        quickSortRec(a, asc, 0, a.size() - 1);
+    }
 
+    private static void quickSortRec(Array<Integer> a, boolean asc, int left, int right) {
+        if (left >= right) return;
+        int r = partition(a, left, right);
+        quickSortRec(a, asc, left, r - 1);
+        quickSortRec(a, asc, r + 1, right);
+    }
+
+    /**
+     * Pick a pivot (leftmost element) and partition a table,
+     * so that all the elements greater (or equal) than pivot are placed on the right side of the pivot,
+     * and all the elements smaller (or equal) than pivot are placed on the left side of the pivot.
+     * <p>
+     * EXAMPLE
+     * initial array: 6 12 3 6 1
+     * pivot: 6 (index=0)
+     * partition:
+     */
+    static int partition(Array<Integer> a, int left, int right) {
+        int p = a.get(left);
+        int l = left;
+        int r = right + 1;
+
+        while (true) {
+            // move left cursor, until you find element greater or equal to pivot
+            do l++; while (a.get(l) < p && l < r);
+            // move right cursor, until you find element lower or equal to pivot
+            do r--; while (a.get(r) > p);
+            // if cursors cross, stop
+            if (l >= r) break;
+            // swap out of place elements
+            swap(a, l, r);
+        }
+
+        swap(a, left, r);
+        return r;
     }
 
     /**

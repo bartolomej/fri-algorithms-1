@@ -9,6 +9,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class SortTest {
 
     Array<Integer> array;
+    Array<Integer> sortedDesc;
+    Array<Integer> sortedAsc;
 
     @BeforeEach
     void beforeEach() {
@@ -19,6 +21,8 @@ class SortTest {
          *  51 29 - -
          */
         array = new Array<>(new Integer[]{42, 17, 27, 51, 29});
+        sortedAsc = new Array<>(new Integer[]{17, 27, 29, 42, 51});
+        sortedDesc = new Array<>(new Integer[]{51, 42, 29, 27, 17});
     }
 
     @Test
@@ -69,13 +73,46 @@ class SortTest {
     void testAscHeapSort() {
         Array<Integer> a = array.clone();
         Sort.heapSort(a, true);
-        assertEquals(new Array<>(new Integer[]{17, 27, 29, 42, 51}), a);
+        assertEquals(sortedAsc, a);
     }
 
     @Test
     void testDescHeapSort() {
         Array<Integer> a = array.clone();
         Sort.heapSort(a, false);
-        assertEquals(new Array<>(new Integer[]{51, 42, 29, 27, 17}), a);
+        assertEquals(sortedDesc, a);
+    }
+
+    @Test
+    void testQuicksortPartition1() {
+        Array<Integer> a = new Array<>(new Integer[]{6, 12, 3, 6, 1});
+        // STACK TRACE:
+        // |6|, 12, 3, 6, 1
+        // |6|, 1, 3, 6, 12
+        // 6, 1, 3, |6|, 12
+        Array<Integer> expected = new Array<>(new Integer[]{6, 1, 3, 6, 12});
+        int pivot = Sort.partition(a, 0, a.size() - 1);
+        assertEquals(3, pivot);
+        assertEquals(expected, a);
+    }
+
+    @Test
+    void testQuicksortPartition2() {
+        Array<Integer> a = array.clone();
+        // STACK TRACE:
+        // |42|, 17, 27, 51, 29
+        // |42|, 17, 27, 29, 51
+        // 29, 17, 27, |41|, 51
+        Array<Integer> expected = new Array<>(new Integer[]{29, 17, 27, 42, 51});
+        int pivot = Sort.partition(a, 0, a.size() - 1);
+        assertEquals(3, pivot);
+        assertEquals(expected, a);
+    }
+
+    @Test
+    void testAscQuickSort() {
+        Array<Integer> a = array.clone();
+        Sort.quickSort(a, true);
+        assertEquals(sortedAsc, a);
     }
 }
