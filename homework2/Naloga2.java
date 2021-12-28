@@ -1,5 +1,6 @@
 package homework2;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Naloga2 {
@@ -13,7 +14,7 @@ public class Naloga2 {
 //        String sort = params[1];
 //        boolean ascending = params[2].equals("up");
 
-        String sort = "merge";
+        String sort = "heap";
         boolean ascending = true;
         Scanner scanner = new Scanner("42 17 27 51 39");
 
@@ -39,6 +40,10 @@ public class Naloga2 {
                 Sort.mergeSort(array, ascending);
                 break;
             }
+            case "heap": {
+                Sort.heapSort(array, ascending);
+                break;
+            }
             default: {
                 throw new Exception("Unsupported sort algorithm");
             }
@@ -49,7 +54,7 @@ public class Naloga2 {
         Array<Integer> sequence = new Array<>();
         String line = scanner.nextLine();
         String[] chars = line.trim().split("[ ]+");
-        for (int i = 0; i < chars.length; i++){
+        for (int i = 0; i < chars.length; i++) {
             sequence.insert(i, Integer.parseInt(chars[i]));
         }
         return sequence;
@@ -85,7 +90,7 @@ class Sort {
      */
     static void insertionSort(Array<Integer> a, boolean asc) {
         for (int i = 1; i < a.size(); i++) {
-            int k  = a.get(i);
+            int k = a.get(i);
             int j = i;
             while (j > 0 && (asc ? a.get(j - 1) > k : a.get(j - 1) < k)) {
                 a.set(j, a.get(j - 1));
@@ -125,7 +130,18 @@ class Sort {
      * - heap is unordered - sift down the root element
      */
     static void heapSort(Array<Integer> a, boolean asc) {
+        int h = a.size() / 2 - 1; // location of last node before leaf nodes
+        for (int i = h; i >= 0; i--) {
+            siftDown(a, i, a.size(), !asc);
+        }
 
+        // TODO: test this
+        int last = a.size() - 1;
+        while (last >= 1) {
+            swap(a, 0, last);
+            last--;
+            siftDown(a, 0, last + 1, !asc);
+        }
     }
 
     /**
@@ -180,7 +196,20 @@ class Sort {
 
     }
 
-    static void swap(Array<Integer> array, int i , int j) {
+    private static void siftDown(Array<Integer> a, int p, int size, boolean maxHeap) {
+        int c = 2 * p + 1; // left child
+        while (c < size && (maxHeap ? a.get(p) < a.get(c) : a.get(p) > a.get(c))) {
+            // right child is larger than left child
+            if (a.get(c + 1) > a.get(c)) {
+                c += 1;
+            }
+            swap(a, c, p);
+            p = c;
+            c = 2 * p + 1;
+        }
+    }
+
+    private static void swap(Array<Integer> array, int i, int j) {
         int a = array.get(i);
         array.set(i, array.get(j));
         array.set(j, a);
@@ -210,6 +239,11 @@ class Array<T> {
     public Array(int maxSize) {
         this.array = new Object[maxSize];
         this.length = 0;
+    }
+
+    public Array(T[] array) {
+        this.array = array;
+        this.length = array.length;
     }
 
     @SuppressWarnings("unchecked")
@@ -265,5 +299,10 @@ class Array<T> {
         Object[] newArray = new Object[this.array.length * 2];
         System.arraycopy(this.array, 0, newArray, 0, this.array.length);
         this.array = newArray;
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.toString(this.array);
     }
 }
