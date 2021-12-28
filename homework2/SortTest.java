@@ -91,7 +91,7 @@ class SortTest {
         // |6|, 1, 3, 6, 12
         // 6, 1, 3, |6|, 12
         Array<Integer> expected = new Array<>(new Integer[]{6, 1, 3, 6, 12});
-        int pivot = Sort.partition(a, 0, a.size() - 1);
+        int pivot = Sort.partition(a, 0, a.size() - 1, true);
         assertEquals(3, pivot);
         assertEquals(expected, a);
     }
@@ -104,7 +104,7 @@ class SortTest {
         // |42|, 17, 27, 29, 51
         // 29, 17, 27, |41|, 51
         Array<Integer> expected = new Array<>(new Integer[]{29, 17, 27, 42, 51});
-        int pivot = Sort.partition(a, 0, a.size() - 1);
+        int pivot = Sort.partition(a, 0, a.size() - 1, true);
         assertEquals(3, pivot);
         assertEquals(expected, a);
     }
@@ -114,5 +114,12 @@ class SortTest {
         Array<Integer> a = array.clone();
         Sort.quickSort(a, true);
         assertEquals(sortedAsc, a);
+    }
+
+    @Test
+    void testDescQuickSort() {
+        Array<Integer> a = array.clone();
+        Sort.quickSort(a, false);
+        assertEquals(sortedDesc, a);
     }
 }

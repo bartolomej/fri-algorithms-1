@@ -119,7 +119,7 @@ public class Sort {
 
     private static void quickSortRec(Array<Integer> a, boolean asc, int left, int right) {
         if (left >= right) return;
-        int r = partition(a, left, right);
+        int r = partition(a, left, right, asc);
         quickSortRec(a, asc, left, r - 1);
         quickSortRec(a, asc, r + 1, right);
     }
@@ -134,16 +134,16 @@ public class Sort {
      * pivot: 6 (index=0)
      * partition:
      */
-    static int partition(Array<Integer> a, int left, int right) {
+    static int partition(Array<Integer> a, int left, int right, boolean asc) {
         int p = a.get(left);
         int l = left;
         int r = right + 1;
 
         while (true) {
             // move left cursor, until you find element greater or equal to pivot
-            do l++; while (a.get(l) < p && l < r);
+            do l++; while ((asc ? a.get(l) < p : a.get(l) > p) && l < r);
             // move right cursor, until you find element lower or equal to pivot
-            do r--; while (a.get(r) > p);
+            do r--; while ((asc ? a.get(r) > p : a.get(r) < p));
             // if cursors cross, stop
             if (l >= r) break;
             // swap out of place elements
