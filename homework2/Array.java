@@ -28,15 +28,11 @@ public class Array<T> {
         return (T) this.array[i];
     }
 
-    public void set(int i, T x) {
-        this.array[i] = x;
-    }
-
     public void add(T x) {
-        this.insert(this.length, x);
+        this.set(this.length, x);
     }
 
-    public void insert(int i, T x) {
+    public void set(int i, T x) {
         while (i > this.array.length - 1) {
             this.resize();
         }
@@ -44,7 +40,7 @@ public class Array<T> {
         if (l > this.length) {
             this.length = l;
         }
-        this.set(i, x);
+        this.array[i] = x;
     }
 
     public void delete(int i) {
@@ -70,6 +66,13 @@ public class Array<T> {
 
     public int size() {
         return this.length;
+    }
+
+    /**
+     * Helper method. Sets all elements of this array to value.
+     */
+    public void fill(T value) {
+        Arrays.fill(array, value);
     }
 
     private void resize() {

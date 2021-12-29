@@ -51,7 +51,7 @@ public class Naloga2 {
         String line = scanner.nextLine();
         String[] chars = line.trim().split("[ ]+");
         for (int i = 0; i < chars.length; i++) {
-            sequence.insert(i, Integer.parseInt(chars[i]));
+            sequence.set(i, Integer.parseInt(chars[i]));
         }
         return sequence;
     }

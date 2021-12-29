@@ -1,5 +1,7 @@
 package homework2;
 
+import java.util.Arrays;
+
 public class Sort {
 
     private static boolean log = true;
@@ -155,10 +157,60 @@ public class Sort {
     }
 
     /**
-     *
+     * It avoids comparison by creating and distributing elements into buckets according to their radix (base).
+     * For numeric elements with more than one digit, the "bucketing" process is repeated for each digit (with stable sort).
      */
     static void radixSort(Array<Integer> a, boolean asc) {
+        int max = getMax(a);
 
+        for (int exp = 1; max / exp > 0; exp *= 10) {
+            countSort(a, asc, exp);
+        }
+    }
+
+    /**
+     *
+     */
+    static void countSort(Array<Integer> a, boolean asc, int exp) {
+        int numberBase = 10;
+        int n = a.size();
+        int i = 0;
+
+        Array<Integer> output = new Array<>(a.size());
+        Array<Integer> count = new Array<>(numberBase);
+        count.fill(0);
+
+        // Store count of occurrences in count[]
+        for (i = 0; i < n; i++) {
+            int p = (a.get(i) / exp) % 10;
+            count.set(p, count.get(p) + 1);
+        }
+
+        // Change count[i] so that count[i] now contains
+        // actual position of this digit in output[]
+        for (i = 1; i < count.size(); i++) {
+            count.set(i, count.get(i) + count.get(i - 1));
+        }
+
+        // Build the output array
+        i = asc ? n - 1 : 0;
+        while (asc ? i >= 0 : i < n) {
+            int p = (a.get(i) / exp) % 10;
+            count.set(p, count.get(p) - 1);
+            if (asc) {
+                output.set(count.get(p), a.get(i));
+                i--;
+            } else {
+                output.set(n - count.get(p) - 1, a.get(i));
+                i++;
+            }
+        }
+
+        // Copy the output array to arr[], so that arr[] now
+        // contains sorted numbers according to current digit
+        for (i = 0; i < n; i++) {
+            a.set(i, output.get(i));
+        }
     }
 
     /**
@@ -166,6 +218,19 @@ public class Sort {
      */
     static void bucketSort(Array<Integer> a, boolean asc) {
 
+    }
+
+    /**
+     * Helper method. Finds the maximum value in array.
+     */
+    static int getMax(Array<Integer> a) {
+        int max = a.get(0);
+        for (int i = 1; i < a.size(); i++) {
+            if (a.get(i) > max) {
+                max = a.get(i);
+            }
+        }
+        return max;
     }
 
     /**

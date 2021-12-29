@@ -122,4 +122,18 @@ class SortTest {
         Sort.quickSort(a, false);
         assertEquals(sortedDesc, a);
     }
+
+    @Test
+    void testAscRadixSort() {
+        Array<Integer> a = array.clone();
+        Sort.radixSort(a, true);
+        assertEquals(sortedAsc, a);
+    }
+
+    @Test
+    void testDescRadixSort() {
+        Array<Integer> a = array.clone();
+        Sort.radixSort(a, false);
+        assertEquals(sortedDesc, a);
+    }
 }
