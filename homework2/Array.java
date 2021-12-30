@@ -47,6 +47,15 @@ public class Array<T> {
         this.array[i] = null;
     }
 
+    public boolean includes(T value) {
+        for (int i = 0; i < size(); i++) {
+            if (array[i] != null && array[i].equals(value)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Array<T> subarray(int start, int end) {
         int length = end - start + 1;
         Array<T> a = new Array<>(length);

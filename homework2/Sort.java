@@ -1,7 +1,5 @@
 package homework2;
 
-import java.util.Arrays;
-
 public class Sort {
 
     private static boolean log = true;
@@ -75,10 +73,12 @@ public class Sort {
 
         int last = a.size() - 1;
         while (last >= 1) {
+            printTrace(a, last);
             swap(a, 0, last);
             siftDown(a, 0, last, asc);
             last--;
         }
+        printTrace(a, last);
     }
 
     /**
@@ -113,15 +113,23 @@ public class Sort {
     }
 
     /**
-     *
+     * Wrapper method for quick sort recursive method.
+     * This is just to keep all sorting methods interface consistent.
      */
     static void quickSort(Array<Integer> a, boolean asc) {
         quickSortRec(a, asc, 0, a.size() - 1);
+        printTrace(a, -1);
     }
 
+    /**
+     * - choose a pivot element (the leftmost element)
+     * - move all elements that are less than pivot on the left side, and all greater elements on the right
+     * - repeat this process for the left and right sub-array, until "left" and "right" cursors meet
+     */
     private static void quickSortRec(Array<Integer> a, boolean asc, int left, int right) {
         if (left >= right) return;
         int r = partition(a, left, right, asc);
+        printQuickTrace(a, left, right, r);
         quickSortRec(a, asc, left, r - 1);
         quickSortRec(a, asc, r + 1, right);
     }
@@ -165,6 +173,7 @@ public class Sort {
 
         for (int exp = 1; max / exp > 0; exp *= 10) {
             countSort(a, asc, exp);
+            printTrace(a, -1);
         }
     }
 
@@ -269,12 +278,28 @@ public class Sort {
         array.set(j, a);
     }
 
+    /**
+     * General purpose trace printing method, that prints "|" after the dividerIndex.
+     */
     static void printTrace(Array<Integer> array, int dividerIndex) {
         if (!Sort.log) {
             return;
         }
         for (int i = 0; i < array.size(); i++) {
             System.out.printf("%s%s", array.get(i), i == dividerIndex ? " | " : " ");
+        }
+        System.out.println();
+    }
+
+    /**
+     * Specialised printing method, adapted for quick sort trace.
+     */
+    static void printQuickTrace(Array<Integer> array, int left, int right, int r) {
+        if (!Sort.log) {
+            return;
+        }
+        for (int i = left; i < right + 1; i++) {
+            System.out.printf("%s%s", array.get(i), i == r || i == r - 1 ? " | " : " ");
         }
         System.out.println();
     }

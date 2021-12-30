@@ -40,6 +40,14 @@ public class Naloga2 {
                 Sort.heapSort(array, ascending);
                 break;
             }
+            case "quick": {
+                Sort.quickSort(array, ascending);
+                break;
+            }
+            case "radix": {
+                Sort.radixSort(array, ascending);
+                break;
+            }
             default: {
                 throw new Exception("Unsupported sort algorithm");
             }
