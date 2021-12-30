@@ -91,6 +91,10 @@ public class Naloga2 {
                 Sort.radixSort(array, ascending);
                 break;
             }
+            case "bucket": {
+                Sort.bucketSort(array, ascending);
+                break;
+            }
             default: {
                 throw new Exception("Unsupported sort algorithm");
             }

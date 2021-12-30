@@ -150,4 +150,19 @@ class SortTest {
         Sort.radixSort(a, false);
         assertEquals(sortedDesc, a);
     }
+
+    @Test
+    void testAscBucketSort() {
+        Array<Integer> a = array.clone();
+        Sort.bucketSort(a, true);
+        assertEquals(sortedAsc, a);
+    }
+
+    @Test
+    void testDescBucketSort() {
+        Array<Integer> a = array.clone();
+        Sort.bucketSort(a, false);
+        assertEquals(sortedDesc, a);
+    }
+
 }

@@ -69,4 +69,11 @@ public class SortCountTest {
         assertEquals("20 20 | 20 20 | 20 20", getStdout());
     }
 
+    @Test
+    void testBucketSort() throws Exception {
+        // TODO: how to calculate ?
+        Naloga2.runCount("bucket", array, true);
+        assertEquals("20 22 | 18 18 | 22 21", getStdout());
+    }
+
 }

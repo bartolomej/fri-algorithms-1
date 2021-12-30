@@ -249,7 +249,46 @@ public class Sort {
      *
      */
     static void bucketSort(Array<Integer> a, boolean asc) {
+        int max = getMax(a);
+        int min = getMin(a);
+        double k = Math.floor(a.size() / 2.0);
+        double v = (max - min + 1) / k;
 
+        Array<Integer>[] buckets = new Array[(int)k];
+        for (int i = 0; i < buckets.length; i++) {
+            buckets[i] = new Array<>();
+        }
+
+        for (int i = 0; i < a.size(); i++) {
+            int ki = (int)Math.floor((a.get(i) - min) / v);
+            if (asc) {
+                buckets[ki].add(a.get(i));
+            } else {
+                buckets[buckets.length - ki - 1].add(a.get(i));
+            }
+        }
+
+        printBuckets(buckets);
+
+        a.clear();
+        for (int i = 0; i < buckets.length; i++) {
+            a.addAll(buckets[i]);
+        }
+
+        insertionSort(a, asc);
+    }
+
+    /**
+     * Helper method. Finds the minimum value in array.
+     */
+    static int getMin(Array<Integer> a) {
+        int min = a.get(0);
+        for (int i = 1; i < a.size(); i++) {
+            if (a.get(i) < min) {
+                min = a.get(i);
+            }
+        }
+        return min;
     }
 
     /**
@@ -311,6 +350,38 @@ public class Sort {
         }
         for (int i = 0; i < array.size(); i++) {
             System.out.printf("%s%s", array.get(i), i == dividerIndex ? " | " : " ");
+        }
+        System.out.println();
+    }
+
+    /**
+     * Specialised trace printing method used for bucket sort.
+     */
+    static void printBuckets(Array<Integer>[] buckets) {
+        if (!logging || !loggingForce) {
+            return;
+        }
+        for (int i = 0; i < buckets.length; i++) {
+            for (int j = 0; j < buckets[i].size(); j++) {
+                System.out.printf("%d ", buckets[i].get(j));
+            }
+            System.out.print(i < buckets.length - 1 ? "| " : "");
+        }
+        System.out.println();
+    }
+
+    /**
+     * Specialised trace printing method used for bucket sort.
+     */
+    static void printBucketsTrace(Array<Integer>[] buckets, int dividerIndex) {
+        if (!logging || !loggingForce) {
+            return;
+        }
+        for (int i = 0; i < buckets.length; i++) {
+            for (int j = 0; j < buckets[i].size(); j++) {
+                System.out.printf("%d ", buckets[i].get(j));
+            }
+            System.out.print(i == dividerIndex ? "| " : "");
         }
         System.out.println();
     }

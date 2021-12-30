@@ -84,6 +84,10 @@ public class Array<T> {
         Arrays.fill(array, value);
     }
 
+    public void clear() {
+        this.length = 0;
+    }
+
     private void resize() {
         Object[] newArray = new Object[this.array.length * 2];
         System.arraycopy(this.array, 0, newArray, 0, this.array.length);
