@@ -2,7 +2,10 @@ package homework2;
 
 public class Sort {
 
-    private static boolean log = true;
+    static boolean logging = true;
+    static boolean loggingForce = true; // forced logging setting
+    public static int assignments = 0;
+    public static int comparisons = 0;
 
     /**
      * Navadno izbiranje.
@@ -12,8 +15,8 @@ public class Sort {
     static void selectionSort(Array<Integer> a, boolean asc) {
         for (int i = 0; i < a.size() - 1; i++) {
             int m = i + 1; // index of smallest/largest element
-            for (int j = i; j < a.size(); j++) {
-                if (asc ? a.get(j) < a.get(m) : a.get(j) > a.get(m)) {
+            for (int j = i + 1; j < a.size(); j++) {
+                if (comparison() && asc ? a.get(j) < a.get(m) : a.get(j) > a.get(m)) {
                     m = j;
                 }
             }
@@ -30,12 +33,15 @@ public class Sort {
     static void insertionSort(Array<Integer> a, boolean asc) {
         for (int i = 1; i < a.size(); i++) {
             int k = a.get(i);
+            assignments += 1; // a[i] assigned to k
             int j = i;
-            while (j > 0 && (asc ? a.get(j - 1) > k : a.get(j - 1) < k)) {
+            while (j > 0 && comparison() && (asc ? a.get(j - 1) > k : a.get(j - 1) < k)) {
                 a.set(j, a.get(j - 1));
                 j--;
+                assignments += 1; // array assignment
             }
             a.set(j, k);
+            assignments += 1; // array value update
             printTrace(a, i);
         }
     }
@@ -51,7 +57,7 @@ public class Sort {
             int newN = n;
             n = -1;
             for (int i = a.size() - 1; i > newN; i--) {
-                if (asc ? a.get(i) < a.get(i - 1) : a.get(i) > a.get(i - 1)) {
+                if (comparison() && asc ? a.get(i) < a.get(i - 1) : a.get(i) > a.get(i - 1)) {
                     swap(a, i, i - 1);
                     n = i;
                 }
@@ -94,7 +100,7 @@ public class Sort {
         printTrace(a, middle);
         Array<Integer> left = mergeSort(a.subarray(0, middle), asc);
         Array<Integer> right = mergeSort(a.subarray(middle + 1, a.size() - 1), asc);
-
+        assignments += 6; // array assignments
         return merge(left, right, asc);
     }
 
@@ -102,14 +108,27 @@ public class Sort {
      * Merges arrays a and b, so that the resulting array is sorted.
      */
     static private Array<Integer> merge(Array<Integer> a, Array<Integer> b, boolean asc) {
-        Array<Integer> joined = new Array<>(a.size() + b.size());
-        joined.addAll(a);
-        joined.addAll(b);
-        Sort.log = false;
-        insertionSort(joined, asc);
-        Sort.log = true;
-        printTrace(joined, -1);
-        return joined;
+        Array<Integer> merged = new Array<>();
+        int ai = 0, bi = 0;
+        while (merged.size() < a.size() + b.size()) {
+            if (ai < a.size() && bi < b.size()) {
+                if (asc ? a.get(ai) < b.get(bi) : a.get(ai) > b.get(bi)) {
+                    merged.add(a.get(ai));
+                    ai++;
+                } else {
+                    merged.add(b.get(bi));
+                    bi++;
+                }
+            } else if (ai < a.size()) {
+                merged.add(a.get(ai));
+                ai++;
+            } else if (bi < b.size()) {
+                merged.add(b.get(bi));
+                bi++;
+            }
+        }
+        printTrace(merged, -1);
+        return merged;
     }
 
     /**
@@ -129,6 +148,7 @@ public class Sort {
     private static void quickSortRec(Array<Integer> a, boolean asc, int left, int right) {
         if (left >= right) return;
         int r = partition(a, left, right, asc);
+        assignments++;
         printQuickTrace(a, left, right, r);
         quickSortRec(a, asc, left, r - 1);
         quickSortRec(a, asc, r + 1, right);
@@ -151,9 +171,9 @@ public class Sort {
 
         while (true) {
             // move left cursor, until you find element greater or equal to pivot
-            do l++; while ((asc ? a.get(l) < p : a.get(l) > p) && l < r);
+            do l++; while (comparison() && (asc ? a.get(l) < p : a.get(l) > p) && l < right);
             // move right cursor, until you find element lower or equal to pivot
-            do r--; while ((asc ? a.get(r) > p : a.get(r) < p));
+            do r--; while (comparison() && (asc ? a.get(r) > p : a.get(r) < p));
             // if cursors cross, stop
             if (l >= r) break;
             // swap out of place elements
@@ -174,6 +194,8 @@ public class Sort {
         for (int exp = 1; max / exp > 0; exp *= 10) {
             countSort(a, asc, exp);
             printTrace(a, -1);
+            assignments += 10;
+            comparisons += 10;
         }
     }
 
@@ -258,10 +280,10 @@ public class Sort {
         int largest = p;
 
         // set the largest element to be the largest of the children elements
-        if (left < size && (maxHeap ? a.get(left) > a.get(largest) : a.get(left) < a.get(largest))) {
+        if (left < size && comparison() && (maxHeap ? a.get(left) > a.get(largest) : a.get(left) < a.get(largest))) {
             largest = left;
         }
-        if (right < size && (maxHeap ? a.get(right) > a.get(largest) : a.get(right) < a.get(largest))) {
+        if (right < size && comparison() && (maxHeap ? a.get(right) > a.get(largest) : a.get(right) < a.get(largest))) {
             largest = right;
         }
 
@@ -276,13 +298,14 @@ public class Sort {
         int a = array.get(i);
         array.set(i, array.get(j));
         array.set(j, a);
+        assignments += 3;
     }
 
     /**
      * General purpose trace printing method, that prints "|" after the dividerIndex.
      */
     static void printTrace(Array<Integer> array, int dividerIndex) {
-        if (!Sort.log) {
+        if (!logging || !loggingForce) {
             return;
         }
         for (int i = 0; i < array.size(); i++) {
@@ -295,12 +318,28 @@ public class Sort {
      * Specialised printing method, adapted for quick sort trace.
      */
     static void printQuickTrace(Array<Integer> array, int left, int right, int r) {
-        if (!Sort.log) {
+        if (!logging || !loggingForce) {
             return;
         }
         for (int i = left; i < right + 1; i++) {
             System.out.printf("%s%s", array.get(i), i == r || i == r - 1 ? " | " : " ");
         }
         System.out.println();
+    }
+
+    /**
+     * Helper method, used to increment comparisons count int while loop condition block.
+     * Append the method before the desired statement, for example:
+     * while (firstCondition() && comparison() && conditionOfInterest())
+     *                            ^ here goes the call (doesn't change the expression)
+     */
+    private static boolean comparison() {
+        comparisons++;
+        return true;
+    }
+
+    static void resetCounts() {
+        assignments = 0;
+        comparisons = 0;
     }
 }

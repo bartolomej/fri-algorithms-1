@@ -1,6 +1,5 @@
 package homework2;
 
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Naloga2 {
@@ -17,8 +16,54 @@ public class Naloga2 {
         Array<Integer> array = readNumberSequence(scanner);
 
         System.out.println();
-        Sort.printTrace(array, -1); // print starting state
 
+        switch (command) {
+            case "trace": {
+                runTrace(sort, array, ascending);
+                break;
+            }
+            case "count": {
+                runCount(sort, array, ascending);
+                break;
+            }
+            default: {
+                throw new Exception("Command not supported");
+            }
+        }
+    }
+
+    static void runTrace(String sort, Array<Integer> array, boolean ascending) throws Exception {
+        Sort.printTrace(array, -1); // print starting state
+        runSort(sort, array, ascending);
+    }
+
+    static void runCount(String sort, Array<Integer> array, boolean ascending) throws Exception {
+        Sort.loggingForce = false;
+        Sort.resetCounts();
+
+        // sort given array
+        runSort(sort, array, ascending);
+        String sortStats = getSortCounts();
+        Sort.resetCounts();
+
+        // sort already sorted array
+        runSort(sort, array.clone(), ascending);
+        String sortStats2 = getSortCounts();
+        Sort.resetCounts();
+
+        // sort already sorted array in reverse direction
+        runSort(sort, array.clone(), !ascending);
+        String reverseSortStats = getSortCounts();
+        Sort.loggingForce = true;
+
+        System.out.printf("%s | %s | %s", sortStats, sortStats2, reverseSortStats);
+    }
+
+    static String getSortCounts() {
+        return String.format("%d %d", Sort.assignments, Sort.comparisons);
+    }
+
+    static void runSort(String sort, Array<Integer> array, boolean ascending) throws Exception {
         switch (sort) {
             case "bubble": {
                 Sort.bubblesort(array, ascending);

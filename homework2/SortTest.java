@@ -84,6 +84,20 @@ class SortTest {
     }
 
     @Test
+    void testAscMergeSort() {
+        Array<Integer> a = array.clone();
+        a = Sort.mergeSort(a, true);
+        assertEquals(sortedAsc, a);
+    }
+
+    @Test
+    void testDescMergeSort() {
+        Array<Integer> a = array.clone();
+        a = Sort.mergeSort(a, false);
+        assertEquals(sortedDesc, a);
+    }
+
+    @Test
     void testQuicksortPartition1() {
         Array<Integer> a = new Array<>(new Integer[]{6, 12, 3, 6, 1});
         // STACK TRACE:
