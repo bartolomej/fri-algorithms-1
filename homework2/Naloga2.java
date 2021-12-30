@@ -15,8 +15,6 @@ public class Naloga2 {
 
         Array<Integer> array = readNumberSequence(scanner);
 
-        System.out.println();
-
         switch (command) {
             case "trace": {
                 runTrace(sort, array, ascending);

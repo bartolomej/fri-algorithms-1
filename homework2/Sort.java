@@ -14,9 +14,9 @@ public class Sort {
      */
     static void selectionSort(Array<Integer> a, boolean asc) {
         for (int i = 0; i < a.size() - 1; i++) {
-            int m = i + 1; // index of smallest/largest element
+            int m = i; // index of smallest/largest element
             for (int j = i + 1; j < a.size(); j++) {
-                if (comparison() && asc ? a.get(j) < a.get(m) : a.get(j) > a.get(m)) {
+                if (comparison() && (asc ? a.get(j) < a.get(m) : a.get(j) > a.get(m))) {
                     m = j;
                 }
             }
@@ -66,6 +66,7 @@ public class Sort {
                 printTrace(a, n - 1);
             }
         }
+        printTrace(a, a.size() - 2);
     }
 
     /**
@@ -194,8 +195,8 @@ public class Sort {
         for (int exp = 1; max / exp > 0; exp *= 10) {
             countSort(a, asc, exp);
             printTrace(a, -1);
-            assignments += 10;
-            comparisons += 10;
+            assignments += a.size() * 2;
+            comparisons += a.size() * 2;
         }
     }
 
@@ -322,7 +323,7 @@ public class Sort {
             return;
         }
         for (int i = left; i < right + 1; i++) {
-            System.out.printf("%s%s", array.get(i), i == r || i == r - 1 ? " | " : " ");
+            System.out.printf("%s%s%s", i == r ? "| " : "", array.get(i), i == r ? " | " : " ");
         }
         System.out.println();
     }
