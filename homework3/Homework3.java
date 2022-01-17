@@ -95,6 +95,34 @@ class Graph {
         return count;
     }
 
+    /**
+     * Calculates total triangles in a graph.
+     * - calculate matrix^3
+     * - sum diagonal values (matrix trace ~ sled)
+     * - divide by 6
+     */
+    public int getTrianglesCount() throws Exception {
+        int[][] matrix3;
+        matrix3 = Utils.matrixMultiply(matrix, matrix);
+        matrix3 = Utils.matrixMultiply(matrix3, matrix);
+        return Graph.getTrace(matrix3) / 6;
+    }
+
+    /**
+     * Topological order can be calculated for DAG (Directed Acyclic Graphs):
+     * - remove all vertices with inbound degree of 0
+     * - add them to the list
+     * - repeat
+     */
+
+    public static int getTrace(int[][] matrix) {
+        int sum = 0;
+        for (int i = 0; i < matrix.length; i++) {
+            sum += matrix[i][i];
+        }
+        return sum;
+    }
+
     public int[] getVertexDegree(int v) {
         int inDegree = 0;
         int outDegree = 0;
@@ -241,6 +269,15 @@ class Utils {
             }
             if (i < matrix.length - 1) {
                 System.out.println();
+            }
+        }
+    }
+
+    public static void printArray(int[] array) {
+        for (int i = 0; i < array.length; i++) {
+            System.out.print(array[i]);
+            if (i < array.length - 1) {
+                System.out.print(" ");
             }
         }
     }
