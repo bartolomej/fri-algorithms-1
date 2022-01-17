@@ -45,7 +45,17 @@ public class Homework3 {
                 graph.dfsFull(false);
                 break;
             }
-            case "sp":
+            case "sp": {
+                int start = Integer.parseInt(settings[2]);
+                for (int i = 0; i < graph.verticesCount(); i++) {
+                    int pathLength = graph.shortestPathLengthBfs(start, i);
+                    System.out.printf("%d %d", i, pathLength);
+                    if (i < graph.verticesCount() - 1) {
+                        System.out.println();
+                    }
+                }
+                break;
+            }
             case "comp":
             case "ham":
             default: {
@@ -143,6 +153,44 @@ class Graph {
             walks = Utils.matrixMultiply(walks, matrix);
         }
         return walks;
+    }
+
+    public int shortestPathLengthBfs(int start, int end) throws Exception {
+        boolean[] visited = new boolean[verticesCount()];
+        int[] from = new int[verticesCount()];
+        from[start] = -1;
+        visited[start] = true;
+        Queue nextNodes = new Queue();
+        nextNodes.enqueue(start);
+        while (!nextNodes.isEmpty()) {
+            int node = nextNodes.dequeue();
+            if (node == end) {
+                return countPathLength(from, node);
+            }
+            int[] children = getChildren(node);
+            for (int child : children) {
+                if (visited[child]) {
+                    continue;
+                }
+                from[child] = node;
+                visited[child] = true;
+                nextNodes.enqueue(child);
+            }
+        }
+        return -1;
+    }
+
+    public static int countPathLength(int[] from, int node) {
+        int length = 0;
+        while (true) {
+            node = from[node];
+            if (node > -1) {
+                length++;
+            } else {
+                break;
+            }
+        }
+        return length;
     }
 
     public void dfsFull(boolean logEntry) {
