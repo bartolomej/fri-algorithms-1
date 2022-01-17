@@ -102,6 +102,15 @@ class Homework3Test {
                         "9 -1", out);
     }
 
+    @Test
+    void testUndirectedComp() throws Exception {
+        String out = run("undirected comp");
+        assertEquals(
+                "0 1 2 3 4 5\n" +
+                        "6 7 9\n" +
+                        "8", out);
+    }
+
     String run(String command) throws Exception {
         inputStream.append(command + "\n");
         inputStream.append(graph);

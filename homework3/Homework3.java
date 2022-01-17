@@ -56,7 +56,10 @@ public class Homework3 {
                 }
                 break;
             }
-            case "comp":
+            case "comp": {
+                graph.printComponents();
+                break;
+            }
             case "ham":
             default: {
                 System.err.println("Unsupported algorithm");
@@ -103,6 +106,57 @@ class Graph {
             }
         }
         return count;
+    }
+
+    public void printComponents() {
+        if (directed) {
+            this.printDirectedComponents();
+        } else {
+            this.printUndirectedComponents();
+        }
+    }
+
+    /**
+     * Izpise krepko povezane komponente.
+     */
+    public void printDirectedComponents() {
+        // TODO: implement
+    }
+
+    public void printUndirectedComponents() {
+        boolean[] allVisited = new boolean[verticesCount()];
+        int i = 0;
+        while(true) {
+            int[] visited = new int[verticesCount()];
+            dfs(i, visited);
+            for (int j = 0; j < visited.length; j++) {
+                if (visited[j] > 0) {
+                    allVisited[j] = true;
+                }
+            }
+            boolean changed = false;
+            for (int j = i; j < visited.length; j++) {
+                if (visited[j] == 0 && !allVisited[j]) {
+                    // vertex hasn't been visited
+                    i = j;
+                    changed = true;
+                    break;
+                }
+            }
+            String out = "";
+            for (int j = 0; j < visited.length; j++) {
+                if (visited[j] > 0) {
+                    out += j + " ";
+                }
+            }
+            // print line without last space
+            System.out.print(out.substring(0, out.length() - 1));
+            if (!changed) {
+                return;
+            } else {
+                System.out.println();
+            }
+        }
     }
 
     /**
@@ -198,13 +252,17 @@ class Graph {
         int[] visited = new int[verticesCount()];
         for (int i = 0; i < verticesCount(); i++) {
             if (visited[i] == 0) {
-                time = dfs(i, visited, time, logEntry);
+                time = dfs(i, visited, time, logEntry ? 0 : 1);
             }
         }
     }
 
-    public int dfs(int node, int[] visited, int time, boolean logEntry) {
-        if (logEntry) {
+    public int dfs(int node, int[] visited) {
+        return dfs(node, visited, 0, -1);
+    }
+
+    public int dfs(int node, int[] visited, int time, int log) {
+        if (log == 0) {
             boolean isLast = time == visited.length;
             System.out.printf("%d" + (isLast ? "" : " "), node);
         }
@@ -212,10 +270,10 @@ class Graph {
         visited[node] = time;
         for (int child : getChildren(node)) {
             if (visited[child] == 0) {
-                dfs(child, visited, time, logEntry);
+                dfs(child, visited, time, log);
             }
         }
-        if (!logEntry) {
+        if (log == 1) {
             // TODO: make sure the last call doesn't print " " at the end
             boolean isLast = time == visited.length;
             System.out.printf("%d" + (isLast ? "" : " "), node);
@@ -278,6 +336,24 @@ class Graph {
 }
 
 class Utils {
+
+    static void selectionSort(int[] a) {
+        for (int i = 0; i < a.length - 1; i++) {
+            int m = i; // index of smallest/largest element
+            for (int j = i + 1; j < a.length; j++) {
+                if (a[j] < a[m]) {
+                    m = j;
+                }
+            }
+            swap(a, i, m);
+        }
+    }
+
+    static void swap(int[] array, int i, int j) {
+        int a = array[i];
+        array[i] = array[j];
+        array[j] = a;
+    }
 
     /**
      * Each element a[i,j] in the resulting is calculated by a vector product of i-th row of matrix A and j-th column of matrix B.
