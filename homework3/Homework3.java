@@ -14,11 +14,14 @@ public class Homework3 {
         boolean directed = settings[0].equals("directed");
         int[][] matrix = new int[nVertices][nVertices];
         while (scanner.hasNextLine()) {
-            int v1 = scanner.nextInt();
-            int v2 = scanner.nextInt();
-            matrix[v1][v2] = 1;
-            if (!directed) {
-                matrix[v2][v1] = 1;
+            String[] parts = scanner.nextLine().trim().split(" ");
+            if (parts.length == 2) {
+                int v1 = Integer.parseInt(parts[0]);
+                int v2 = Integer.parseInt(parts[1]);
+                matrix[v1][v2] = 1;
+                if (!directed) {
+                    matrix[v2][v1] = 1;
+                }
             }
         }
 
@@ -74,9 +77,11 @@ public class Homework3 {
         for (int i = 0; i < graph.verticesCount(); i++) {
             int[] inOutDegree = graph.getVertexDegree(i);
             inOutDegrees[i][0] = i;
-            inOutDegrees[i][1] = inOutDegree[0];
             if (graph.directed) {
-                inOutDegrees[i][2] = inOutDegree[1];
+                inOutDegrees[i][1] = inOutDegree[1];
+                inOutDegrees[i][2] = inOutDegree[0];
+            } else {
+                inOutDegrees[i][1] = inOutDegree[0];
             }
         }
         Utils.printMatrix(inOutDegrees);
